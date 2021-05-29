@@ -17,3 +17,7 @@ class Requests:
             loaded += 1000
             params['offset'] = loaded
         return result
+
+    @staticmethod
+    def get_members_prototype():
+        pass

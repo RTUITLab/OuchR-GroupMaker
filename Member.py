@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 import re
 from dateutil.relativedelta import relativedelta
@@ -5,8 +6,8 @@ from dateutil.relativedelta import relativedelta
 
 class Member:
     id = 0
-    first_name = ''
-    last_name = ''
+    firstName = ''
+    lastName = ''
     age = 0
     sex = ''
 
@@ -15,19 +16,28 @@ class Member:
     university = ''
     graduation = 0
     faculty = ''
-    grad_year = ''  # far/this/next
+    gradYear = ''  # far/this/next
 
     employed = False
 
-    is_it_spec = False
-    it_metrics = {}
-    it_score = 0
+    isITSpec = False
+    iTMetrics = {}
+    iTScore = 0
 
     def __init__(self, raw_member):
+        self.city = ''
+        self.university = ''
+        self.graduation = 0
+        self.faculty = ''
+        self.gradYear = ''  # far/this/next
+        self.employed = False
+        self.isITSpec = False
+        self.iTMetrics = {}
+        self.iTScore = 0
 
         self.id = raw_member['id']
-        self.first_name = raw_member['first_name']
-        self.last_name = raw_member['last_name']
+        self.firstName = raw_member['first_name']
+        self.lastName = raw_member['last_name']
         self.sex = raw_member['sex']
         if 'bdate' in raw_member and len(raw_member['bdate']) > 6:
             bdate = datetime.strptime(raw_member['bdate'], '%d.%m.%Y')
@@ -38,9 +48,12 @@ class Member:
             self.city = raw_member['city']['title']
 
         if 'university_name' in raw_member:
-            self.university = raw_member['university_name']
-            self.graduation = raw_member['graduation']
-            self.faculty = raw_member['faculty_name']
+            if 'university_name' != '':
+                self.university = raw_member['university_name']
+            if 'graduation' != 0:
+                self.graduation = raw_member['graduation']
+            if 'faculty' != '':
+                self.faculty = raw_member['faculty_name']
 
         if 'career' in raw_member:
             career_list = list(raw_member['career'])
@@ -50,7 +63,23 @@ class Member:
                 if 'until' not in career_list[-1]:
                     self.employed = True
 
+        self.set_grad_year()
         self.calc_it_score()
+
+    def set_grad_year(self):
+        cur_date = datetime.today()
+        if self.graduation == 0:
+            return
+
+        if cur_date.month < 6 and self.graduation == cur_date.year:
+            self.gradYear = 'this'
+            return
+
+        if self.graduation == cur_date.year+1:
+            self.gradYear = 'next'
+            return
+
+        self.gradYear = 'far'
 
     def get_param(self, param_name):
         if param_name == 'city':
@@ -73,6 +102,11 @@ class Member:
         return False
 
     def calc_it_score(self):
+        self.iTMetrics['faculty'] = 0
 
         if self.is_it_faculty():
-            self.it_metrics['faculty'] = 1
+            self.iTMetrics['faculty'] = 10
+            self.iTScore += 10
+
+    def encode(self):
+        return self.__dict__

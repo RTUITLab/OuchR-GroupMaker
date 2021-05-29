@@ -8,7 +8,7 @@ def get_members():
     request_params = {'v': 5.131,
                       'group_id': 'rosatomcareer',
                       'sort': 'id_desc',
-                      'offset': 0,
+                      'offset': 1000,
                       'count': 1000,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4'
                       }
@@ -75,13 +75,45 @@ def get_member_base_info(members_ids):
     return member_base_info
 
 
+def calculate_it_specs(members):
+    it_count = 0
+    s = 0.0
+    for m in members:
+        s += float(m.iTScore)
+    average = s / float(len(members))
+    for m in members:
+        if float(m.iTScore) >= average:
+            it_count += 1
+            m.isITSpec = True
+    return it_count
+
+
+def calculate_grads(members, year):
+    grads_count = 0
+    for m in members:
+        if m.gradYear == year:
+            grads_count += 1
+    return grads_count
+
+
 def execute():
     r_members = get_members()
     members_bi = get_member_base_info(r_members)
     r_members = convert_to_member_class(members_bi)
     city_stats = make_top(r_members, 'city')
     edu_stats = make_top(r_members, 'university')
-
+    it_count = calculate_it_specs(r_members)
+    this_year_count = calculate_grads(r_members, 'this')
+    next_year_count = calculate_grads(r_members, 'next')
+    data_to_send = {"membersCount": len(r_members),
+                    "itCount": it_count,
+                    "thisYearGrads": this_year_count,
+                    "nextYearGrads": next_year_count,
+                    "members": r_members,
+                    "cityTop": city_stats,
+                    "eduStats": edu_stats
+                    }
+    return data_to_send
     print(0)
 
 

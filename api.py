@@ -1,11 +1,12 @@
 from fastapi import FastAPI, File, UploadFile
 import uvicorn
+import main
 app = FastAPI()
 
 @app.get("/")
 async def root():
 
-    return "Test ter"
+    return main.execute()
 
 @app.post("/getInter")
 async def getInter(str: str = str(...)):
