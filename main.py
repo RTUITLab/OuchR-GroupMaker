@@ -4,7 +4,6 @@ from Member import Member
 from Requests import Requests
 
 
-# Only for 1000 members!
 def get_members():
     request_params = {'v': 5.131,
                       'group_id': 'rosatomcareer',
@@ -13,8 +12,7 @@ def get_members():
                       'count': 1000,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4'
                       }
-    #
-    # res = r.get('https://api.vk.com/method/groups.getMembers', params=request_params)
+
     members_ids = Requests.get_members(request_params, 1000)
     return members_ids
 

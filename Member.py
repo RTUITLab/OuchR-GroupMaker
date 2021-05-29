@@ -13,8 +13,9 @@ class Member:
     city = ''
 
     university = ''
-    graduation = ''
+    graduation = 0
     faculty = ''
+    grad_year = ''  # far/this/next
 
     employed = False
 
