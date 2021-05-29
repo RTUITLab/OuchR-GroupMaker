@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 
 class Member:
@@ -6,12 +7,19 @@ class Member:
     first_name = ''
     last_name = ''
     age = 0
+
     country = ''
     city = ''
+
     university = ''
     graduation = ''
+    faculty = ''
+
     company = ''
     position = ''
+
+    it_metrics = {}
+    it_score = 0
 
     def __init__(self, raw_member):
         self.id = raw_member['id']
@@ -25,9 +33,9 @@ class Member:
             self.city = raw_member['city']['title']
 
         if 'university_name' in raw_member:
-            print(raw_member['university_name'] + ' --- ' + raw_member['faculty_name'])
             self.university = raw_member['university_name']
             self.graduation = raw_member['graduation']
+            self.faculty = raw_member['faculty_name']
 
         if 'career' in raw_member:
             career_list = list(raw_member['career'])
@@ -46,6 +54,8 @@ class Member:
             cur_date = datetime.today()
             self.age = cur_date - bdate
 
+        self.calc_it_score()
+
     def get_param(self, param_name):
         if param_name == 'city':
             return self.city
@@ -55,3 +65,25 @@ class Member:
             return self.company
         if param_name == 'position':
             return self.position
+
+    def is_it_faculty(self):
+        it_fac_patterns = [r'инженер',  # вопрос
+                           r'цифр',
+                           r'информ',
+                           r'безопас',
+                           r'кибер',
+                           r'автомат',
+                           r'прог',
+                           r'комп']
+        for pattern in it_fac_patterns:
+            if re.search(pattern, self.faculty, re.IGNORECASE):
+                return True
+        return False
+
+    def calc_it_score(self):
+        if self.university != '':
+            print(self.faculty)
+            if self.is_it_faculty():
+                print('YES')
+            else:
+                print('NO')
