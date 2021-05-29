@@ -63,7 +63,7 @@ def make_top(members, param):
 
 def get_member_base_info(members_ids):
     ids_json = json.dumps(members_ids)
-    extra_fields = 'country,city,bdate,education,career, sex'
+    extra_fields = 'country,city,bdate,education,career,sex'
     request_params = {'v': 5.131,
                       'user_ids': ids_json,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4',

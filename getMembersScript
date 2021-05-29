@@ -1,0 +1,29 @@
+var at = {access_token};
+var gi = {group_id};
+var loaded = 0;
+var offset = 0;
+var testQuery = API.groups.getMembers({{
+	'v': 5.131,
+	'group_id': gi,
+	'sort': 'id_desc',
+	'offset': 0,
+	'count': 0,
+	'access_token': at
+}});
+var total = testQuery.count;
+if (total > 10000)
+	total = 10000;
+var result = [];
+while (loaded < total) {{
+	var thisQuery = API.groups.getMembers({{
+		'v': 5.131,
+		'group_id': gi,
+		'sort': 'id_desc',
+		'offset': loaded,
+		'count': 1000,
+		'access_token': at
+	}});
+	loaded = loaded + 1000;
+	result = result + thisQuery.items;
+}}
+return result;

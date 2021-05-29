@@ -98,7 +98,8 @@ class Member:
                            r'комп']
         for pattern in it_fac_patterns:
             if re.search(pattern, self.faculty, re.IGNORECASE):
-                return True
+                if re.search(pattern, self.faculty):
+                    return True
         return False
 
     def calc_it_score(self):
