@@ -67,7 +67,7 @@ class Member:
             return self.position
 
     def is_it_faculty(self):
-        it_fac_patterns = [r'инженер',  # вопрос
+        it_fac_patterns = [r'инженер',  # под вопросом
                            r'цифр',
                            r'информ',
                            r'безопас',
@@ -81,9 +81,6 @@ class Member:
         return False
 
     def calc_it_score(self):
-        if self.university != '':
-            print(self.faculty)
-            if self.is_it_faculty():
-                print('YES')
-            else:
-                print('NO')
+
+        if self.is_it_faculty():
+            self.it_metrics['faculty'] = 1
