@@ -8,7 +8,7 @@ from Requests import Requests
 def get_members():
     request_params = {'v': 5.131,
                       'group_id': 'rosatomcareer',
-                      'sort': 'id_asc',
+                      'sort': 'id_desc',
                       'offset': 0,
                       'count': 1000,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4'
@@ -39,20 +39,6 @@ def get_group_names(groups):
     return groups_dict
 
 
-def specify_companies(members):
-    comp_to_specify = []
-    for m in members:
-        company_id = m.get_param('company')
-        if isinstance(company_id, int):
-            comp_to_specify.append(company_id)
-
-    company_names = get_group_names(comp_to_specify)
-    for m in members:
-        company_id = m.get_param('company')
-        if isinstance(company_id, int):
-            m.company = company_names[str(company_id)]
-
-
 def convert_to_member_class(member_base_info):
     new_members = []
     for m in member_base_info['response']:
@@ -79,7 +65,7 @@ def make_top(members, param):
 
 def get_member_base_info(members_ids):
     ids_json = json.dumps(members_ids)
-    extra_fields = 'country,city,bdate,education,career'
+    extra_fields = 'country,city,bdate,education,career, sex'
     request_params = {'v': 5.131,
                       'user_ids': ids_json,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4',
@@ -95,11 +81,8 @@ def execute():
     r_members = get_members()
     members_bi = get_member_base_info(r_members)
     r_members = convert_to_member_class(members_bi)
-    specify_companies(r_members)
     city_stats = make_top(r_members, 'city')
     edu_stats = make_top(r_members, 'university')
-    career_stats = make_top(r_members, 'company')
-    pos_stats = make_top(r_members, 'position')
 
     print(0)
 
