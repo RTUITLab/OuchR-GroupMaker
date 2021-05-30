@@ -1,0 +1,21 @@
+var uids = {id_list};
+
+var gl = {groups_list};
+
+var at = {access_token};
+
+var result = [];
+
+var i = 0;
+while (i < gl.length) {{
+    var thisQuery = API.groups.get({{
+		'v': 5.131,
+		'group_id': gi[i],
+		'user_ids': uids,
+		'access_token': at
+	}});
+	result.push(thisQuery);
+	i = i + 1;
+}}
+
+return result;

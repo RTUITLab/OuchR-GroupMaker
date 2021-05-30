@@ -1,3 +1,5 @@
+import time
+
 import requests as r
 
 
@@ -75,3 +77,28 @@ class Requests:
         }
         response = r.get('https://api.vk.com/method/execute', params=params)
         return response.json()
+
+    @staticmethod
+    def get_is_member(members, groups):
+        raw_script = Requests.load_script('checkMembershipScript')
+        total = len(members)
+        ids = []
+        for i in range(len(members)):
+            ids.append(members[i].id)
+        loaded = 0
+        result = []
+        while loaded < total:
+            param_script = raw_script.format(access_token=Requests.qtoken,
+                                             groups_list=groups,
+                                             id_list=ids[loaded:loaded+500])
+            loaded += 500
+            params = {
+                'v': '5.131',
+                'access_token': Requests.token,
+                'code': param_script
+            }
+            response = r.get('https://api.vk.com/method/execute', params=params)
+            total += 500
+            time.sleep(0.5)
+            result.append(response)
+        return result

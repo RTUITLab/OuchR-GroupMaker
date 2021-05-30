@@ -106,7 +106,11 @@ def calculate_grads(members, year):
 
 
 def calc_membership_score(members):
-    pass
+    groups = ['windowsblog', 'programmistov', 'habr', 'tproger', 'javarush',
+              'i_technology', 'itcookies', 'proglib', 'tnull', 'itmozg',
+              'yandex.academy', 'mrgforedu', 'mrgforstudents', 'yandex.praktikum']
+    group_matrix = Requests.get_is_member(members, groups)
+    return group_matrix
 
 
 def make_age_clusters(members):
@@ -167,10 +171,13 @@ def execute():
         new_dict = {'university': edu_stats[i][0], 'count': edu_stats[i][1]}
         edu_list.append(new_dict)
 
+    calc_membership_score(members)
+
     it_count = calculate_it_specs(members)
     this_year_count = calculate_grads(members, 'this')
     it_grads_count = calc_it_grads(members)
     age_clusters = make_age_clusters(members)
+
 
     data_to_send = {"membersCount": len(members),
                     "itCount": it_count,
