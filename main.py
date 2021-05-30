@@ -5,19 +5,6 @@ from Requests import Requests
 import datetime as dt
 
 
-def get_members():
-    request_params = {'v': 5.131,
-                      'group_id': 'rosatomcareer',
-                      'sort': 'id_desc',
-                      'offset': 1000,
-                      'count': 1000,
-                      'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4'
-                      }
-
-    members_ids = Requests.get_members(request_params, 1000)
-    return members_ids
-
-
 def get_group_name(link):
     request_params = {'v': 5.131,
                       'group_ids': link,
@@ -50,20 +37,6 @@ def make_top(members, param):
     top_dict = dict(sorted(cnt_dict.items(), key=lambda item: item[1], reverse=True))
     top_dict.pop('')
     return top_dict
-
-
-def get_member_base_info(members_ids):
-    ids_json = json.dumps(members_ids)
-    extra_fields = 'country,city,bdate,education,career,sex'
-    request_params = {'v': 5.131,
-                      'user_ids': ids_json,
-                      'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4',
-                      'fields': extra_fields
-                      }
-    res = r.get('https://api.vk.com/method/users.get', params=request_params)
-    member_base_info = res.json()
-
-    return member_base_info
 
 
 def get_one_user_info(member_id):
@@ -117,23 +90,33 @@ def calculate_grads(members, year):
     return grads_count
 
 
+def calc_membership_score(members):
+    pass
+
+
+
 def execute():
-    r_members = get_members()
-    members_bi = get_member_base_info(r_members)
-    r_members = convert_to_member_class(members_bi)
-    city_stats = make_top(r_members, 'city')
-    edu_stats = make_top(r_members, 'university')
-    it_count = calculate_it_specs(r_members)
-    this_year_count = calculate_grads(r_members, 'this')
-    next_year_count = calculate_grads(r_members, 'next')
-    data_to_send = {"membersCount": len(r_members),
+    Requests.load_token()
+
+    members_dict = Requests.get_member_info_proto()
+    members = convert_to_member_class(members_dict)
+
+    city_stats = make_top(members, 'city')
+    edu_stats = make_top(members, 'university')
+
+    it_count = calculate_it_specs(members)
+    this_year_count = calculate_grads(members, 'this')
+    next_year_count = calculate_grads(members, 'next')
+
+    data_to_send = {"membersCount": len(members),
                     "itCount": it_count,
                     "thisYearGrads": this_year_count,
                     "nextYearGrads": next_year_count,
-                    "members": r_members,
+                    "members": members,
                     "cityTop": city_stats,
                     "eduStats": edu_stats
                     }
+
     return data_to_send
 
 

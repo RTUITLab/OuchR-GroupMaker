@@ -1,18 +1,7 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 import uvicorn
 import main
-import sandbox
 app = FastAPI()
-
-
-@app.get("/")
-async def root():
-    return main.execute()
-
-
-@app.post("/getInter")
-async def getInter(str: str = str(...)):
-    return str
 
 
 @app.get("/getInfoById")
@@ -22,7 +11,7 @@ async def getInfoById(num: int):
 
 @app.get('/performByExecute')
 async def performByExecute():
-    return sandbox.execute()
+    return main.execute()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
