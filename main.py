@@ -18,24 +18,14 @@ def get_members():
     return members_ids
 
 
-def get_group_names(groups):
-    groups_str = ''
-    for g in groups:
-        groups_str += str(g)
-        groups_str += ','
-
-    groups_str = groups_str[:-1]
-
+def get_group_name(link):
     request_params = {'v': 5.131,
-                      'group_ids': groups_str,
+                      'group_ids': link,
                       'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4'
                       }
-    res = r.get('https://api.vk.com/method/groups.getById', params=request_params)
-    res = res.json()
-    groups_dict = {}
-    for elem in res['response']:
-        groups_dict[str(elem['id'])] = elem['name']
-    return groups_dict
+    res = r.get('https://api.vk.com/method/groups.getById', params=request_params).json()
+    res = res['response'][0]['name']
+    return res
 
 
 def convert_to_member_class(member_base_info):
@@ -93,6 +83,8 @@ def get_one_user_info(member_id):
                 career += c['company'] + ', '
             if 'position' in c:
                 career += c['position'] + ', '
+            if 'group_id' in c:
+                career += get_group_name(c['group_id']) + ', '
     career = career[:-2]
     if user.bdate != '':
         dt.datetime.isoformat(user.bdate)
@@ -129,7 +121,6 @@ def execute():
     r_members = get_members()
     members_bi = get_member_base_info(r_members)
     r_members = convert_to_member_class(members_bi)
-    default = get_one_user_info(343783295)
     city_stats = make_top(r_members, 'city')
     edu_stats = make_top(r_members, 'university')
     it_count = calculate_it_specs(r_members)
