@@ -50,18 +50,28 @@ class Requests:
     @staticmethod
     def get_members_proto():
         raw_script = Requests.load_script('getMembersScript')
-        param_script = raw_script.format(access_token=Requests.qtoken, group_id=Requests.group_id)
+        param_script = raw_script.format(access_token=Requests.qtoken,
+                                         group_id=Requests.group_id)
 
         params = {
             'v': '5.131',
             'access_token': Requests.token,
             'code': param_script
             }
-        response = r.get('https://api.vk.com/method/execute', params=params).json()
-        print(0)
+        result = r.get('https://api.vk.com/method/execute', params=params).json()['response']
+        return result
 
     @staticmethod
     def get_member_info_proto(members):
         raw_script = Requests.load_script('getUsersScript')
-        extra_fields = 'country,city,bdate,education,career,sex'
-        param_script = raw_script.format(access_token=Requests.qtoken, group_id=Requests.group_id)
+        extra_fields = '\'country,city,bdate,education,career,sex\''
+        param_script = raw_script.format(access_token=Requests.qtoken,
+                                         user_ids=members,
+                                         extra_fields=extra_fields)
+        params = {
+            'v': '5.131',
+            'access_token': Requests.token,
+            'code': param_script
+        }
+        response = r.get('https://api.vk.com/method/execute', params=params)
+        print(0)

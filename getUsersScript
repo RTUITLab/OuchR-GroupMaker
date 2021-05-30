@@ -1,26 +1,26 @@
 var at = {access_token};
-var users = {user_ids};
+var users = {user_ids}.items;
 
 var users_split = [];
 var spl = 0;
 while (spl < users.length) {{
     var new_part = users.slice(spl, spl+1001);
     users_split.push(new_part);
-    spl += 1000;
+    spl = spl + 1001;
 }}
 
 var i = 0;
 var result = [];
-ef = {extra_fields};
+var ef = {extra_fields};
 while (i < users_split.length) {{
-    var thisQuery = API.groups.getUsers({{
+    var thisQuery = API.users.get({{
 		'v': 5.131,
-		'user_ids': ids_json,
+		'user_ids':  users_split[i],
 		'access_token': at,
 		'fields': ef
 	}});
-    result = result + thisQuery.items;
-    i+=1;
+    result = result + thisQuery;
+    i = i + 1;
 }}
 
 return result;

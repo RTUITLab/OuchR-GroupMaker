@@ -1,5 +1,6 @@
 from Requests import Requests
 
 Requests.load_token()
-Requests.get_members_proto()
-
+members_ids = Requests.get_members_proto()
+members_info = Requests.get_member_info_proto(members_ids)
+print(0)
