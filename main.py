@@ -2,6 +2,7 @@ import requests as r
 import json
 from Member import Member
 from Requests import Requests
+import datetime as dt
 
 
 def get_members():
@@ -75,6 +76,34 @@ def get_member_base_info(members_ids):
     return member_base_info
 
 
+def get_one_user_info(member_id):
+    extra_fields = 'country,city,bdate,education,career,sex'
+    request_params = {'v': 5.131,
+                      'user_ids': member_id,
+                      'access_token': 'd9acf98cd9acf98cd9acf98c96d9de6273dd9acd9acf98c874aa57b9b6642522b5a44e4',
+                      'fields': extra_fields
+                      }
+    res = r.get('https://api.vk.com/method/users.get', params=request_params).json()['response'][0]
+    user = Member(res)
+
+    career = ''
+    if 'career' in res:
+        for c in res['career']:
+            if 'company' in c:
+                career += c['company'] + ', '
+            if 'position' in c:
+                career += c['position'] + ', '
+    career = career[:-2]
+    if user.bdate != '':
+        dt.datetime.isoformat(user.bdate)
+
+    data_to_return = {'bdate': user.bdate,
+                      'university': user.university,
+                      'faculty': user.faculty,
+                      'career': career}
+    return data_to_return
+
+
 def calculate_it_specs(members):
     it_count = 0
     s = 0.0
@@ -100,6 +129,7 @@ def execute():
     r_members = get_members()
     members_bi = get_member_base_info(r_members)
     r_members = convert_to_member_class(members_bi)
+    default = get_one_user_info(343783295)
     city_stats = make_top(r_members, 'city')
     edu_stats = make_top(r_members, 'university')
     it_count = calculate_it_specs(r_members)

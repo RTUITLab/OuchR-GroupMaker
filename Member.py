@@ -9,6 +9,7 @@ class Member:
     firstName = ''
     lastName = ''
     age = 0
+    bday = ''
     sex = ''
 
     city = ''
@@ -34,6 +35,7 @@ class Member:
         self.isITSpec = False
         self.iTMetrics = {}
         self.iTScore = 0
+        self.bdate = ''
 
         self.id = raw_member['id']
         self.firstName = raw_member['first_name']
@@ -41,6 +43,7 @@ class Member:
         self.sex = raw_member['sex']
         if 'bdate' in raw_member and len(raw_member['bdate']) > 6:
             bdate = datetime.strptime(raw_member['bdate'], '%d.%m.%Y')
+            self.bdate = bdate
             cur_date = datetime.today()
             self.age = relativedelta(cur_date, bdate).years
 
