@@ -79,7 +79,7 @@ class Member:
             return
 
         if self.graduation == cur_date.year+1:
-            self.gradYear = 'next'
+            self.gradYear = 'this'
             return
 
         self.gradYear = 'far'
