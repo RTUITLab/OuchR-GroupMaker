@@ -1,6 +1,8 @@
 var gl = {groups_list};
 var uids = {id_list};
 
+var table = []
+
 var i = 0;
 while (i < gc) {{
     var thisQuery = API.groups.getMembers({{
