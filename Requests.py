@@ -62,12 +62,12 @@ class Requests:
         return result
 
     @staticmethod
-    def get_member_info_proto(members):
-        raw_script = Requests.load_script('getUsersScript')
+    def get_member_info_proto():
+        raw_script = Requests.load_script('getMembersScript')
         extra_fields = '\'country,city,bdate,education,career,sex\''
         param_script = raw_script.format(access_token=Requests.qtoken,
-                                         user_ids=members,
-                                         extra_fields=extra_fields)
+                                         extra_fields=extra_fields,
+                                         group_id=Requests.group_id)
         params = {
             'v': '5.131',
             'access_token': Requests.token,

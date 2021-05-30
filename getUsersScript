@@ -1,5 +1,5 @@
 var at = {access_token};
-var users = {user_ids}.items;
+var users = {user_ids};
 
 var users_split = [];
 var spl = 0;

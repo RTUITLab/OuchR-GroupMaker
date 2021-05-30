@@ -11,8 +11,8 @@ var testQuery = API.groups.getMembers({{
 	'access_token': at
 }});
 var total = testQuery.count;
-if (total > 1001)
-	total = 1001;
+if (total > 10000)
+	total = 10000;
 var result = [];
 while (loaded < total) {{
 	var thisQuery = API.groups.getMembers({{
@@ -26,4 +26,27 @@ while (loaded < total) {{
 	loaded = loaded + 1000;
 	result = result + thisQuery.items;
 }}
+var users = result;
+var users_split = [];
+var spl = 0;
+while (spl < users.length) {{
+    var new_part = users.slice(spl, spl+1001);
+    users_split.push(new_part);
+    spl = spl + 1001;
+}}
+
+var i = 0;
+var result = [];
+var ef = {extra_fields};
+while (i < users_split.length) {{
+    var thisQuery = API.users.get({{
+		'v': 5.131,
+		'user_ids':  users_split[i],
+		'access_token': at,
+		'fields': ef
+	}});
+    result = result + thisQuery;
+    i = i + 1;
+}}
+
 return result;
