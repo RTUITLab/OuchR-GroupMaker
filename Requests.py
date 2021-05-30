@@ -74,4 +74,4 @@ class Requests:
             'code': param_script
         }
         response = r.get('https://api.vk.com/method/execute', params=params)
-        print(0)
+        return response.json()
