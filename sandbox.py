@@ -4,7 +4,6 @@ import main
 
 def execute():
     Requests.load_token()
-    # members_ids = Requests.get_members_proto()
     members_info = Requests.get_member_info_proto()
     r_members = main.convert_to_member_class(members_info)
     city_stats = main.make_top(r_members, 'city')

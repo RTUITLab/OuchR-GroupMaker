@@ -135,7 +135,6 @@ def execute():
                     "eduStats": edu_stats
                     }
     return data_to_send
-    print(0)
 
 
 if __name__ == '__main__':
